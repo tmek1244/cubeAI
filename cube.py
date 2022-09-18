@@ -8,6 +8,16 @@ class Cube:
     def reset(self) -> None:
         for i in range(6):  
             self.walls[i] = np.full((3, 3), i)
+    
+    def get_color(self, id) -> tuple[int, int, int]:
+        return {
+            0: (255, 255, 255),  # WHITE
+            1: (0, 255, 0),      # GREEN
+            2: (255, 0, 0),      # RED
+            3: (0, 0, 255),      # BLUE
+            4: (255, 165, 0),    # ORANGE
+            5: (255, 255, 0)     # YELLOW
+        }[self.walls.flat[id]]
 
     def u(self) -> None:
         self.walls[0] = np.rot90(self.walls[0], k=3)
