@@ -1,4 +1,3 @@
-from re import S
 from typing import Callable
 import pygame
 from math import cos, sin, pi
@@ -54,34 +53,37 @@ class Square:
         self.matrix_coords = np.asarray(tmp, dtype=np.float32).reshape(4, -1)
         self.rotated = self.matrix_coords
 
-    
     def rotate(self, rotation):
         m = self.matrix_coords.T
         for method, angle in zip((generate_x, generate_y, generate_z), rotation):
             m = method(angle) @ m
-        self.rotated = (WIDTH/2 - m).T
+        m += 250
+        m = m.T
+        m[:, 2] = 500 - m[:, 2]
+        self.rotated = m
+        # self.rotated = (WIDTH/2 - m).T
         
 
-points = [[], [], []]
+points = [[], [], [], [], [], []]
 
 points[0] = [
-    Square(lambda x: (i+x[0], 3, j+x[1]), i*3+j) for i in range(3) for j in range(3)
+    Square(lambda x: (i+x[0], j+x[1], 3), i*3+j) for i in range(3) for j in range(3)
 ]
 points[1] = [
-    Square(lambda x: (0, i+x[0], j+x[1]), i*3+j+9) for i in range(3) for j in range(3)
+    Square(lambda x: (i+x[0], 0, j+x[1]), i*3+j+9) for i in range(3) for j in range(3)
 ]
 points[2] = [
     Square(lambda x: (3, i+x[0], j+x[1]), i*3+j+18) for i in range(3) for j in range(3)
 ]
-# points[3] = [
-#     Square(lambda x: (i+x[0], 3, j+x[1]), i*3+j+27) for i in range(3) for j in range(3)
-# ]
-# points[4] = [
-#     Square(lambda x: (0, i+x[0], j+x[1]), i*3+j+36) for i in range(3) for j in range(3)
-# ]
-# points[5] = [
-#     Square(lambda x: (i+x[0], j+x[1], 0), i*3+j+45) for i in range(3) for j in range(3)
-# ]
+points[3] = [
+    Square(lambda x: (i+x[0], 3, j+x[1]), i*3+j+27) for i in range(3) for j in range(3)
+]
+points[4] = [
+    Square(lambda x: (0, i+x[0], j+x[1]), i*3+j+36) for i in range(3) for j in range(3)
+]
+points[5] = [
+    Square(lambda x: (i+x[0], j+x[1], 0), i*3+j+45) for i in range(3) for j in range(3)
+]
 points = np.asarray(points)
 
 def draw_point(x, y, z, rotation):
@@ -89,8 +91,9 @@ def draw_point(x, y, z, rotation):
         
     for method, angle in zip((generate_x, generate_y, generate_z), rotation):
         m = method(angle) * m
-    m = WIDTH/2 - m
-    pygame.draw.circle(surface, (128, 128, 128), m[:2].flatten().tolist()[0], 10)
+    m = m + 250
+    m[2] = 500 - m[2]
+    pygame.draw.circle(surface, (128, 128, 128), m[[0, 2]].T.tolist()[0], 10)
 
 
 if __name__ == '__main__':
@@ -125,6 +128,10 @@ if __name__ == '__main__':
                     rotation[1] += pi / 32 
                 if e.key == pygame.K_UP:
                     rotation[1] -= pi / 32 
+                if e.key == pygame.K_LCTRL:
+                    rotation[2] += pi / 32
+                if e.key == pygame.K_LSHIFT:
+                    rotation[2] -= pi / 32
                 print(rotation)
            
         pygame.draw.rect(surface, (0, 0, 0), pygame.Rect(0, 0, WIDTH, HEIGHT))
@@ -135,12 +142,13 @@ if __name__ == '__main__':
             p.rotate(rotation)
 
         # render_points = np.array([p.rotate(rotation) for p in points.flat])
-        for i, p1 in enumerate(sorted(points.flat, key=lambda x: max(x.rotated[:, 2]))):
-            pygame.draw.polygon(surface, cube.get_color(p1.id), p1.rotated[:, :2].tolist())
-        draw_point(0, 0, 0, rotation)
-        draw_point(0, 0, 3, rotation)
-        draw_point(0, 3, 0, rotation)
-        draw_point(3, 0, 0, rotation)
+        for i, p1 in enumerate(sorted(points.flat, key=lambda x: max(x.rotated[:, 1]), reverse=True)):
+            pygame.draw.polygon(surface, cube.get_color(p1.id), p1.rotated[:, [0, 2]].tolist())
+        # break
+        # draw_point(0, 0, 0, rotation)
+        # draw_point(0, 0, 3, rotation)
+        # draw_point(0, 3, 0, rotation)
+        # draw_point(3, 0, 0, rotation)
         # draw_point(0, 0, 3, rotation)
         # rotation += np.array([pi / randint(100, 200), pi / randint(100, 200), 0], dtype=np.float32)
 
