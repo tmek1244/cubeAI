@@ -67,22 +67,22 @@ class Square:
 points = [[], [], [], [], [], []]
 
 points[0] = [
-    Square(lambda x: (i+x[0], j+x[1], 3), i*3+j) for i in range(3) for j in range(3)
+    Square(lambda x: (i+x[0], j+x[1], 3), (2 - j)*3+i) for i in range(3) for j in range(3)
 ]
 points[1] = [
-    Square(lambda x: (i+x[0], 0, j+x[1]), i*3+j+9) for i in range(3) for j in range(3)
+    Square(lambda x: (i+x[0], 0, j+x[1]), (2-j)*3+i+9) for i in range(3) for j in range(3)
 ]
 points[2] = [
-    Square(lambda x: (3, i+x[0], j+x[1]), i*3+j+18) for i in range(3) for j in range(3)
+    Square(lambda x: (3, i+x[0], j+x[1]), (2 - j)*3+(i)+18) for i in range(3) for j in range(3)
 ]
 points[3] = [
-    Square(lambda x: (i+x[0], 3, j+x[1]), i*3+j+27) for i in range(3) for j in range(3)
+    Square(lambda x: (i+x[0], 3, j+x[1]), (2-j)*3+i+27) for i in range(3) for j in range(3)
 ]
 points[4] = [
-    Square(lambda x: (0, i+x[0], j+x[1]), i*3+j+36) for i in range(3) for j in range(3)
+    Square(lambda x: (0, i+x[0], j+x[1]), (2 - j)*3+(2 - i)+36) for i in range(3) for j in range(3)
 ]
 points[5] = [
-    Square(lambda x: (i+x[0], j+x[1], 0), i*3+j+45) for i in range(3) for j in range(3)
+    Square(lambda x: (i+x[0], j+x[1], 0), j*3+i+45) for i in range(3) for j in range(3)
 ]
 points = np.asarray(points)
 
@@ -120,6 +120,8 @@ if __name__ == '__main__':
                     cube.u()
                 if e.key == pygame.K_r:
                     cube.r()
+                if e.key == pygame.K_l:
+                    cube.l()
                 if e.key == pygame.K_LEFT:
                     rotation[0] += pi / 32         
                 if e.key == pygame.K_RIGHT:
@@ -145,7 +147,7 @@ if __name__ == '__main__':
         for i, p1 in enumerate(sorted(points.flat, key=lambda x: max(x.rotated[:, 1]), reverse=True)):
             pygame.draw.polygon(surface, cube.get_color(p1.id), p1.rotated[:, [0, 2]].tolist())
         # break
-        # draw_point(0, 0, 0, rotation)
+        draw_point(0, 0, 0, rotation)
         # draw_point(0, 0, 3, rotation)
         # draw_point(0, 3, 0, rotation)
         # draw_point(3, 0, 0, rotation)
@@ -155,7 +157,7 @@ if __name__ == '__main__':
         display.flip()
         counter+=1
         if (time.time() - start_time) > x :
-            print("FPS: ", counter / (time.time() - start_time))
+            # print("FPS: ", counter / (time.time() - start_time))
             counter = 0
             start_time = time.time()
         sleep(1/50)

@@ -22,6 +22,8 @@ class Cube:
     def u(self) -> None:
         self.walls[0] = np.rot90(self.walls[0], k=3)
         self.walls[[1, 2, 3, 4], 0] = self.walls[[2, 3, 4, 1], 0]
+        print(self.walls)
+        print(self.walls.flatten())
 
     def r(self) -> None:
         self.walls[2] = np.rot90(self.walls[2], k=3)
@@ -29,7 +31,13 @@ class Cube:
 
     def d(self) -> None:
         self.walls[5] = np.rot90(self.walls[5], k=3)    
-        self.walls[[1, 2, 3, 4], 0] = self.walls[[4, 1, 2, 3], 0]
+        self.walls[[1, 2, 3, 4], 2] = self.walls[[4, 1, 2, 3], 2]
+
+    def l(self) -> None:
+        self.walls[4] = np.rot90(self.walls[4], k=1)
+        self.walls[[1, 0, 3, 5], :, 0] = self.walls[[0, 3, 5, 1], :, 0]
+        print(self.walls)
+        print(self.walls.flatten())
 
 
 
