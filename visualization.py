@@ -126,6 +126,8 @@ if __name__ == '__main__':
                     cube.f()
                 if e.key == pygame.K_b:
                     cube.b()
+                if e.key == pygame.K_t:
+                    cube.u_()
                 if e.key == pygame.K_LEFT:
                     rotation[0] += pi / 32         
                 if e.key == pygame.K_RIGHT:

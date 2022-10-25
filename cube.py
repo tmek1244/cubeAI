@@ -67,6 +67,17 @@ class Cube:
         self.walls[4, :, 0] = tmp[0, 0, ::-1]
         print(self.walls)
 
+    def __getattr__(self, item) -> None:
+        method = None
+        if len(item) == 2 and item[1] == '_':
+            method = self.__getattribute__(item[0])
+        
+        def wrapper(method):
+            def func():
+                for _ in range(3):
+                    method()
+            return func
+        return wrapper(method)
 
 
 if __name__ == "__main__":
