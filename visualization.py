@@ -114,20 +114,39 @@ if __name__ == '__main__':
                 done = True
                 break
             if e.type == pygame.KEYDOWN:
+                mods = pygame.key.get_mods()
+
                 if e.key == pygame.K_d:
-                    cube.d()
+                    if mods & pygame.KMOD_CTRL:
+                        cube.d_()
+                    else:
+                        cube.d()
                 if e.key == pygame.K_u:
-                    cube.u()
+                    if mods & pygame.KMOD_CTRL:
+                        cube.u_()
+                    else:
+                        cube.u()
                 if e.key == pygame.K_r:
-                    cube.r()
+                    if mods & pygame.KMOD_CTRL:
+                        cube.r_()
+                    else:
+                        cube.r()
                 if e.key == pygame.K_l:
-                    cube.l()
+                    if mods & pygame.KMOD_CTRL:
+                        cube.l_()
+                    else:
+                        cube.l()
                 if e.key == pygame.K_f:
-                    cube.f()
+                    if mods & pygame.KMOD_CTRL:
+                        cube.f_()
+                    else:
+                        cube.f()
                 if e.key == pygame.K_b:
-                    cube.b()
-                if e.key == pygame.K_t:
-                    cube.u_()
+                    if mods & pygame.KMOD_CTRL:
+                        cube.b_()
+                    else:
+                        cube.b()
+ 
                 if e.key == pygame.K_LEFT:
                     rotation[0] += pi / 32         
                 if e.key == pygame.K_RIGHT:
